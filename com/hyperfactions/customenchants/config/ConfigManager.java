@@ -18,14 +18,13 @@ public class ConfigManager
 {
 	private JavaPlugin plugin;
 	
-	private Config config, friends;
+	private Config config;
 	
 	public ConfigManager(JavaPlugin plugin)
 	{
 		this.plugin = plugin;
 		
 		config = this.getNewConfig("config.yml");
-		friends = this.getNewConfig("friends.yml");
 	}
 	
 	public Config getConfig()
@@ -33,11 +32,6 @@ public class ConfigManager
 		return config;
 	}
 	
-	public Config getFriendConfig()
-	{
-		return friends;
-	}
-
 	public Config getNewConfig(String fileName, String[] header)
 	{
 		File file = this.getConfigFile(fileName);
