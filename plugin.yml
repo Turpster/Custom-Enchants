@@ -1,0 +1,6 @@
+main: com.hyperfactions.customenchants.CustomEnchants
+name: Custom-Enchants
+version: 0.1
+commands: 
+  ce:
+    description: Enchantment GUI
