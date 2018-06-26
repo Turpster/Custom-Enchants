@@ -10,9 +10,10 @@ public abstract class GUI implements Listener
 {
 	private Inventory inventory;
 	
-	public GUI(Inventory inventory)
+	public GUI(GUIHandler handler, Inventory inventory)
 	{
 		this.inventory = inventory;
+		handler.GUIs.add(this);
 	}
 	
 	public void openInventory(Player player)

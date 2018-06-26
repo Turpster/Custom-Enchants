@@ -31,8 +31,6 @@ public class Commands implements CommandExecutor
 				 *   - A description of the enchantments
 				 *     - An effect on the armour and sword
 				 */
-				
-				if (pla)
 			}
 			else 
 			{
