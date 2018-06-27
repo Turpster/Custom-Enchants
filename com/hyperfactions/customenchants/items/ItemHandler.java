@@ -2,10 +2,15 @@ package com.hyperfactions.customenchants.items;
 
 import java.util.List;
 
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.hyperfactions.customenchants.config.Config;
+
+import net.md_5.bungee.api.ChatColor;
 
 public class ItemHandler implements Listener
 {	
@@ -45,5 +50,27 @@ public class ItemHandler implements Listener
 			}
 		}
 		return null;
+	}
+	
+	@EventHandler
+	public void onItemCraft(CraftItemEvent e)
+	{ 
+		ItemStack[] items = e.getClickedInventory().getContents();
+		
+		for (ItemStack item : items)
+		{
+			if (this.getItem(item) != null)
+			{
+				Item customitem = this.getItem(item);
+				if (customitem.type == Item.ItemType.SUCCESS_RATE_DUST)
+				{
+					e.setCancelled(true);
+					for (HumanEntity humanEntity : e.getViewers())
+					{
+						humanEntity.sendMessage(ChatColor.GREEN + "Craft> " + ChatColor.RESET + "You cannot use " + customitem.type.toString() + " for crafting.");
+					}
+				}
+			}
+		}
 	}
 }

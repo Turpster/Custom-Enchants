@@ -22,7 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import com.hyperfactions.customenchants.config.Config;
 import com.hyperfactions.customenchants.items.enchants.Enchantment.EnchantType;
 
-public abstract class EnchantmentHandler implements Listener
+public class EnchantmentHandler implements Listener
 {
 	private Plugin plugin;
 	private Config config;

@@ -5,14 +5,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.hyperfactions.customenchants.config.ConfigManager;
+import com.hyperfactions.customenchants.gui.Enchantments;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class Commands implements CommandExecutor
 {
+	private Enchantments enchantments;
 	
-
+	public Commands(Enchantments enchantments)
+	{
+		this.enchantments = enchantments;
+	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) 
 	{
@@ -20,16 +24,15 @@ public class Commands implements CommandExecutor
 		{
 			if (sender instanceof Player)
 			{
-				Player player = (Player) sender;
-				
-				/*
-				 * TODO
-				 * Open GUI
-				 * - List of enchantments 
-				 *   - The effect of the enchantments
-				 *   - A description of the enchantments
-				 *     - An effect on the armour and sword
-				 */
+				if (args.length == 0)
+				{
+					Player player = (Player) sender;
+					enchantments.openInventory(player);
+				}
+				else
+				{
+					sender.sendMessage(ChatColor.GREEN + "CE> " + ChatColor.RESET + "Invalid Arguments, do " + ChatColor.GREEN + "/ce" + ChatColor.RESET + ".");
+				}
 			}
 			else 
 			{
