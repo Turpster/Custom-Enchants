@@ -13,9 +13,24 @@ public class Enchantment
 			switch(this)
 			{
 			case HEAL_RIFT:
+				return 5;
+			case KABOOM:
+				return 2;
+			case HOUND_DOG:
+				return 5;
+			default:
+				return 0;
+			}
+		}
+		
+		public int getMaxCombinedLevel()
+		{
+			switch(this)
+			{
+			case HEAL_RIFT:
 				return 15;
 			case KABOOM:
-				return 15;
+				return 8;
 			case HOUND_DOG:
 				return 15;
 			default:

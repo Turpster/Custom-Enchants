@@ -18,18 +18,18 @@ public class ConfigManager
 {
 	private JavaPlugin plugin;
 	
-	private Config config;
+	private Config database;
 	
 	public ConfigManager(JavaPlugin plugin)
 	{
 		this.plugin = plugin;
 		
-		config = this.getNewConfig("config.yml");
+		database = this.getNewConfig("database.yml");
 	}
 	
-	public Config getConfig()
+	public Config getDatabase()
 	{
-		return config;
+		return database;
 	}
 	
 	public Config getNewConfig(String fileName, String[] header)
