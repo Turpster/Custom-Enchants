@@ -39,9 +39,12 @@ public class CustomEnchants extends JavaPlugin
 		enchantmentHandler = new EnchantmentHandler(this, database);
 		itemHandler = new ItemHandler(database);
 		enchantmentsGUI = new Enchantments();
-		commands = new Commands(enchantmentsGUI);
+		commands = new Commands(itemHandler, enchantmentHandler, enchantmentsGUI);
 		
 		this.getCommand("ce").setExecutor(commands);
+		this.getCommand("enchant").setExecutor(commands);
+		this.getCommand("getitem").setExecutor(commands);
+		
 		
 		
 		Bukkit.getPluginManager().registerEvents(enchantmentHandler, this);
