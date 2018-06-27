@@ -1,5 +1,6 @@
 package com.hyperfactions.customenchants.items.enchants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -18,17 +19,18 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.hyperfactions.customenchants.items.ItemHandler;
+import com.hyperfactions.customenchants.config.Config;
+import com.hyperfactions.customenchants.items.enchants.Enchantment.EnchantType;
 
 public abstract class EnchantmentHandler implements Listener
 {
-	private ItemHandler itemHandler;
 	private Plugin plugin;
+	private Config config;
 
-	public EnchantmentHandler(Plugin plugin, ItemHandler itemHandler)
+	public EnchantmentHandler(Plugin plugin, Config config)
 	{
 		this.plugin = plugin;
-		this.itemHandler = itemHandler;
+		this.config = config;
 	}
 
 	@EventHandler
@@ -51,9 +53,9 @@ public abstract class EnchantmentHandler implements Listener
 		{
 			player = (Player) e.getDamager();
 			ItemStack item = player.getInventory().getItemInMainHand();
-			if (itemHandler.getEnchants(item) != null)
+			if (this.getEnchants(item) != null)
 			{
-				List<Enchantment> enchants = itemHandler.getEnchants(item);
+				List<Enchantment> enchants = this.getEnchants(item);
 				for (Enchantment enchant : enchants)
 				{
 					int kaboomtotallevel = 0;
@@ -131,9 +133,9 @@ public abstract class EnchantmentHandler implements Listener
 
 			for (ItemStack item : armour)
 			{
-				if (itemHandler.getEnchants(item) != null)
+				if (this.getEnchants(item) != null)
 				{
-					List<Enchantment> enchantments = itemHandler.getEnchants(item);
+					List<Enchantment> enchantments = this.getEnchants(item);
 					for (Enchantment enchant : enchantments)
 					{
 						if (enchant.getType() == Enchantment.EnchantType.HEAL_RIFT)
@@ -156,5 +158,56 @@ public abstract class EnchantmentHandler implements Listener
 				}
 			}
 		}
+	}
+	
+	public List<Enchantment> getEnchants(ItemStack itemStack)
+	{
+		List<String> lores = itemStack.getItemMeta().getLore();
+		
+		List<Enchantment> enchantments = new ArrayList<Enchantment>();
+		
+		for (String lore : lores)
+		{
+			if (lore.startsWith("ID: "))
+			{
+				int ID = Integer.parseInt(lore.substring(6));
+
+				if (config.getList("items." + ID + ".enchants") != null)
+				{
+					@SuppressWarnings("unchecked")
+					List<String> itemEnchants = (List<String>) config.getList("items." + ID + ".enchants");
+					
+					for (String enchantment : itemEnchants)
+					{
+						if (enchantment == Enchantment.EnchantType.HEAL_RIFT.toString())
+						{
+							Enchantment enchant = new Enchantment(EnchantType.HEAL_RIFT);
+							enchant.setLevel(config.getInt("items." + ID + ".enchants." + enchantment + ".level"));
+							enchantments.add(enchant);
+							
+						}
+						if (enchantment == Enchantment.EnchantType.HOUND_DOG.toString())
+						{
+							Enchantment enchant = new Enchantment(EnchantType.HOUND_DOG);
+							enchant.setLevel(config.getInt("items." + ID + ".enchants." + enchantment + ".level"));
+							enchantments.add(enchant);
+						}
+						if (enchantment == Enchantment.EnchantType.KABOOM.toString())
+						{
+							Enchantment enchant = new Enchantment(EnchantType.KABOOM);
+							
+							enchant.setLevel(config.getInt("items." + ID + ".enchants." + enchantment + ".level"));
+							enchantments.add(enchant);
+						}
+					}
+				}
+			}
+		}
+		
+		if (enchantments.size() != 0)
+		{
+			return enchantments;
+		}
+		else return null;
 	}
 }
