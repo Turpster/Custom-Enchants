@@ -4,43 +4,41 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.Potion;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.hyperfactions.customenchants.items.ItemHandler;
-
-import net.minecraft.server.v1_12_R1.EnchantmentSlotType;
 
 public abstract class EnchantmentHandler implements Listener
 {
 	private ItemHandler itemHandler;
+	private Plugin plugin;
 
-	public EnchantmentHandler(ItemHandler itemHandler)
+	public EnchantmentHandler(Plugin plugin, ItemHandler itemHandler)
 	{
+		this.plugin = plugin;
 		this.itemHandler = itemHandler;
 	}
 
 	@EventHandler
 	public void onEntityHit(EntityDamageByEntityEvent e)
 	{
-		Player player, target;
+		Player player;
 
-		if (e.getEntity() instanceof Player) 
-		{
-			target = (Player) e.getEntity();
-		}
 		if (e.getDamager() instanceof Projectile)
 		{
 			player = (Player) ((Projectile) e.getDamager()).getShooter();
-			Projectile projectile = (Projectile) e.getDamager();
 		}
 		else if (e.getDamager().getType() == EntityType.SPLASH_POTION)
 		{
@@ -69,6 +67,7 @@ public abstract class EnchantmentHandler implements Listener
 					{
 						hounddogtotallevel += enchant.level;
 					}
+					Random r = new Random();
 					
 					if (kaboomtotallevel != 0)
 					{
@@ -77,7 +76,6 @@ public abstract class EnchantmentHandler implements Listener
 							kaboomtotallevel = Enchantment.EnchantType.KABOOM.getMaxCombinedLevel();
 						}
 						
-						Random r = new Random();
 						
 						int chance = r.nextInt(100000);
 						int percentage = 1000 * kaboomtotallevel;
@@ -92,6 +90,25 @@ public abstract class EnchantmentHandler implements Listener
 						if (hounddogtotallevel > Enchantment.EnchantType.HOUND_DOG.getMaxCombinedLevel())
 						{
 							hounddogtotallevel = Enchantment.EnchantType.HOUND_DOG.getMaxCombinedLevel();
+						}
+						
+						int chance = r.nextInt(100000);
+						int percentage = 1000 * kaboomtotallevel;
+						
+						if (percentage >= chance)
+						{
+							Wolf wolf = (Wolf) player.getWorld().spawnEntity(player.getLocation(), EntityType.WOLF);
+							wolf.setOwner(player);
+							wolf.setTarget((LivingEntity) e.getEntity());
+							
+							new BukkitRunnable()
+							{
+								@Override
+								public void run() 
+								{
+									wolf.setHealth(0);	
+								}
+							}.runTaskLater(plugin, 20 * (3 * hounddogtotallevel));
 						}
 					}
 				}
